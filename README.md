@@ -19,16 +19,16 @@ a new user entry in `settings.yaml`. You will need to add the private
 key counterpart to your ssh-agent when connecting to sshagentca. This
 user *must* have a principal of root for this exemplar. For example
 
-	user_principals:
-		-
-			name: jane
-			sshpublickey: "ssh-rsa AAAAB3NzaC1yc2EAAAADA.....6NYmTGxxqyAtiw== test1"
-			principals:
-				- root
+    user_principals:
+      -
+        name: jane
+        sshpublickey: "ssh-rsa AAAAB3NzaC1y.....mTGxxqyAtiw== test1"
+        principals:
+          - root
 
 Now build the image:
 
-	docker build --tag sshagentca:0.0.5-beta ./
+  docker build --tag sshagentca:0.0.5-beta ./
 
 This will build a fairly minimal alpine image and make sshagentca after
 running the project tests.
@@ -37,15 +37,15 @@ running the project tests.
 
 Run the docker image
 
-    docker run -ti -p 2222:2222 -p 48084:22 sshagentca:v3-alpine
+    docker run -ti -p 2222:2222 -p 48084:22 sshagentca:0.0.5-beta
 
 # Connect
 
 Now add the private key of the ssh public key you added above to your
 ssh agent. For example:
 
-	eval $(ssh-agent)
-	ssh-add <private_part_of_public_key_in_settings>
+  eval $(ssh-agent)
+  ssh-add <private_part_of_public_key_in_settings>
 
 Now run `ssh` with `-A` to forward the agent as follows:
 
@@ -63,7 +63,7 @@ which should provide output along the following lines:
 Now you can test connecting to the ssh server on the Docker image by
 running:
 
-	ssh -p 48084 root@127.0.0.1
+    ssh -p 48084 root@127.0.0.1
 
 This should work to allow certificate-based access as the sshd server
 uses the CA public key counterpart to the CA private key in this
