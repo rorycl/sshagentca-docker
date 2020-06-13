@@ -6,7 +6,7 @@ This Dockerfile builds an example docker image for the `sshagentca` ssh
 server forwarding agent certificate authority at
 https://github.com/rorycl/sshagentca.
 
-# Build 
+## Build 
 
 First edit the settings file to add an existing or new ssh public key to
 a new user entry in `settings.yaml`
@@ -16,7 +16,7 @@ a new user entry in `settings.yaml`
 This will build a fairly minimal alpine image and build sshagentca after
 running the project tests.
 
-# Run
+## Run
 
 Run the docker image
 
@@ -36,7 +36,7 @@ should provide output along the following lines:
     > run 'ssh-add -l' to view
     > goodbye
 
-# Remote servers
+## Remote servers
 
 To test this on a server, add the CA public key in the Docker container
 to `sshd_config`, eg:
