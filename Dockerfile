@@ -52,5 +52,4 @@ EXPOSE 2222 22
 
 # run sshd and sshagentca
 COPY run.sh run.sh
-RUN ls -lt /sshagentca/run.sh
 CMD /sshagentca/run.sh
