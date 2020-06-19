@@ -44,8 +44,8 @@ Run the docker image
 Now add the private key of the ssh public key you added above to your
 ssh agent. For example:
 
-  eval $(ssh-agent)
-  ssh-add <private_part_of_public_key_in_settings>
+    eval $(ssh-agent)
+    ssh-add <private_part_of_public_key_in_settings>
 
 Now run `ssh` with `-A` to forward the agent as follows:
 
@@ -66,10 +66,9 @@ running:
     ssh -p 48084 root@127.0.0.1
 
 This should work to allow certificate-based access as the sshd server
-uses the CA public key counterpart to the CA private key in this
-directive:
+uses the CA public key counterpart to the CA private key using the 
+`TrustedUserCAKeys` directive.
 
-    TrustedUserCAKeys /etc/ssh/ca.pub
 
 ## License
 
