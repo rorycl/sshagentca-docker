@@ -1,7 +1,7 @@
 #!/bin/ash
 
 # start sshd
-/usr/sbin/sshd -E /sshagentca/ssh.log
+/usr/sbin/sshd -E /app/ssh.log
 status=$?
 if [ $status -ne 0 ]; then
   echo "Failed to start sshd: $status"
