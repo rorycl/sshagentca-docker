@@ -51,3 +51,9 @@ user_principals:
         principals:
             - web
             - database
+
+    -
+        name: briony
+        sshpublickey: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHbnCfkNiWUUMUcudbFVHU1pefuFfmz8gbtTMVA0hdWD briony@test.com"
+        principals:
+            - root
