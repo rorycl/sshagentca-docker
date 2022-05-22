@@ -31,7 +31,7 @@ counterpart to your ssh-agent when connecting to sshagentca. This user
 
 Now build the image:
 
-  docker build --tag sshagentca:0.0.7-beta ./
+    docker build --tag sshagentca:0.0.7-beta ./
 
 This will use a multi-stage build to first download the project source,
 run the tests, build the go `sshagentca` binary and then copy the binary
