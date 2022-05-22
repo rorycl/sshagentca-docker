@@ -1,26 +1,39 @@
-# for sshagentca version 0.0.5-beta : 09 June 2020
+# for sshagentca version 0.0.7-beta : September 2021
 # https://github.com/rorycl/sshagentca
-# RoryCL 13 June 2020
+# RoryCL 21 May 2022
 
-FROM golang:1.14-alpine
+FROM golang:1.17-alpine
 
 # add ssh-keygen
-RUN apk add --no-cache --update openssh-keygen
-RUN apk add --no-cache --update openssh-server
-RUN apk add --no-cache --update git
+RUN apk add --no-cache --update openssh-keygen && \
+    apk add --no-cache --update openssh-server && \
+    apk add --no-cache --update git
 
-WORKDIR /sshagentca
+# WORKDIR /sshagentca
+WORKDIR /build
 
 # retrieve latest sshagentca release
-RUN git clone https://github.com/rorycl/sshagentca.git ./
-RUN git checkout -b 0.0.5-beta
+RUN git clone https://github.com/rorycl/sshagentca.git ./ && \
+    git checkout -b 0.0.7-beta
 
 # setup the go environment; note gcc isn't in alpine
-RUN go mod download
-RUN go get -d -v ./...
 ENV CGO_ENABLED=0
-RUN go test ./...
-RUN go build
+RUN go mod download && \
+    go get -d -v ./... && \
+    go test ./... && \
+	go build
+
+# make leaner target
+FROM alpine:latest
+
+# add ssh-keygen
+RUN apk add --no-cache --update openssh-keygen && \
+    apk add --no-cache --update openssh-server
+
+WORKDIR /app
+
+# https://docs.docker.com/develop/develop-images/multistage-build/
+COPY --from=0 /build/sshagentca /app/sshagentca
 
 # environment for the sshagentca server
 ENV SSHAGENTCA_PVT_KEY eer4Cei8
@@ -33,17 +46,19 @@ ENV SSHAGENTCA_PORT 2222
 COPY settings.yaml ./
 
 # generate keys for the server
-RUN ssh-keygen -t ecdsa -b 521 -f id_pvt -N ${SSHAGENTCA_PVT_KEY} > /dev/null 2>&1
-RUN ssh-keygen -t ecdsa -b 521 -f id_ca -N ${SSHAGENTCA_CA_KEY} > /dev/null 2>&1
+RUN ssh-keygen -t ed25519 -f id_pvt -N ${SSHAGENTCA_PVT_KEY} > /dev/null 2>&1 && \
+	ssh-keygen -t ed25519 -f id_ca -N ${SSHAGENTCA_CA_KEY} > /dev/null 2>&1
 
 # setup the ssh server keys, trusteduserca keys configuration
-RUN ssh-keygen -A
-RUN echo "TrustedUserCAKeys /sshagentca/id_ca.pub" >> /etc/ssh/sshd_config
+RUN ssh-keygen -A && \
+    echo "TrustedUserCAKeys /app/id_ca.pub" >> /etc/ssh/sshd_config && \
+    echo "LogLevel VERBOSE" >> /etc/ssh/sshd_config && \
+    echo "Port 48084" >> /etc/ssh/sshd_config
 
 # enable root user for login
 RUN sed -i s/root:!/"root:*"/g /etc/shadow
 
-EXPOSE 2222 22
+EXPOSE 2222 48084
 
 # run the sshagentca server and ssh server
 # CMD ./sshagentca -t id_pvt -c id_ca -p ${SSHAGENTCA_PORT} settings.yaml
@@ -52,4 +67,4 @@ EXPOSE 2222 22
 
 # run sshd and sshagentca
 COPY run.sh run.sh
-CMD /sshagentca/run.sh
+CMD /app/run.sh
