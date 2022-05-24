@@ -21,7 +21,7 @@ ENV CGO_ENABLED=0
 RUN go mod download && \
     go get -d -v ./... && \
     go test ./... && \
-	go build
+    go build
 
 # make leaner target
 FROM alpine:latest
@@ -47,7 +47,7 @@ COPY settings.yaml ./
 
 # generate keys for the server
 RUN ssh-keygen -t ed25519 -f id_pvt -N ${SSHAGENTCA_PVT_KEY} > /dev/null 2>&1 && \
-	ssh-keygen -t ed25519 -f id_ca -N ${SSHAGENTCA_CA_KEY} > /dev/null 2>&1
+    ssh-keygen -t ed25519 -f id_ca -N ${SSHAGENTCA_CA_KEY} > /dev/null 2>&1
 
 # setup the ssh server keys, trusteduserca keys configuration
 RUN ssh-keygen -A && \
