@@ -46,23 +46,30 @@ Run the docker image
 ## Example
 
     $ eval $(ssh-agent)
-      Agent pid 2253284
+      Agent pid 2490112
 
     $ ssh-add briony
       Identity added: briony (briony@test.com)
 
-    $ ssh -A -p 2222 root@127.0.0.1
-      acmeinc ssh user certificate service
+    $ ssh-add -l
+      256 SHA256:Ye3VV0z4vDvAuiZYqw4ji2Ht/JlDTMNlpTZoeZR+bDs briony@test.com (ED25519)
 
+    $ ssh -A -p 2222 127.0.0.1
+      acmeinc ssh user certificate service
+      
       welcome, briony
       certificate generation complete
       run 'ssh-add -l' to view
       goodbye
 
+    $ ssh-add -l
+      256 SHA256:Ye3VV0z4vDvAuiZYqw4ji2Ht/JlDTMNlpTZoeZR+bDs briony@test.com (ED25519)
+      256 SHA256:wfFD6xj3qGNCli3WkRda8SMbRP6WwleZWU9dt9oJDZw acmeinc_briony_from:2022-05-24T06:06_to:2022-05-24T09:06UTC (ED25519-CERT)
+
     $ ssh -p 48084 root@127.0.0.1
       Welcome to Alpine!
       ...
-      707c6ed4c4b0:~# exit
+      fd54c3009dc2:~# exit
 
 ## License
 
